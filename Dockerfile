@@ -1,23 +1,28 @@
-FROM ubuntu:trusty
-RUN apt-get update && apt-get upgrade -y
-RUN env DEBIAN_FRONTEND=noninteractive apt-get -y install heimdal-dev
-RUN apt-get -y install \
-	gcc \
-	python-dev \
-	python-pip
+FROM ubuntu:xenial
+
+WORKDIR /root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+	apt-get upgrade -y && \
+	apt-get install --no-install-recommends -y \
+		build-essential \
+		ca-certificates \
+		curl \
+		file \
+		xutils-dev
+
 RUN \
-	apt-get -y install software-properties-common && \
-	apt-add-repository -y ppa:sssd/updates && \
-	apt-add-repository -y ppa:rharwood/krb5-1.13 && \
-	apt-get update && \
-	env DEBIAN_FRONTEND=noninteractive apt-get -y install \
+	apt-get -y install \
 		krb5-admin-server \
 		krb5-kdc \
 		krb5-multidev \
 		krb5-user \
-		libkrb5-dev && \
-	env DEBIAN_FRONTEND=noninteractive apt-get -y install \
-		krb5-greet-client || true
+		libkrb5-dev \
+		gcc \
+		python-dev \
+		python-pip
 
 ADD . /gssapi
 WORKDIR /gssapi
